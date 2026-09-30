@@ -255,9 +255,21 @@ Os seis casos cobrem os dois lados de D1, D3, D4, D6, D7, D8, D9 e D11, além do
 
 ## 6. Código Corrigido
 
-O arquivo completo está em [`scriptnovo.js`](./scriptnovo.js). Função `finalizarPedido` corrigida:
+O arquivo completo está em [`script2.js`](./script2.js). Função `finalizarPedido` corrigida:
 
 ```js
+const precos = {
+  notebook: 3000,
+  mouse: 80,
+  teclado: 150
+};
+
+const estoque = {
+  notebook: 5,
+  mouse: 20,
+  teclado: 10
+};
+
 const LIMITE_ALTO_VALOR = 3000;
 const QTD_MINIMA_DESCONTO = 5;
 
