@@ -1,100 +1,136 @@
-# Teste de Caixa Branca
+# Teste de Caixa Branca – Sistema de Pedidos
 
-| | |
-|---|---|
-| **Instituição** | SENAI |
-| **Curso** | Técnico de Desenvolvimento de Sistemas |
-| **Unidade curricular** | SESI CE 356 |
-| **Atividade** | Teste de Caixa Branca – Sistema de Pedidos |
-| **Aluno** | julianopls |
-| **Turma** | 3A |
-| **Professores** | Robson, Reenye e Wellington |
-| **Data** | 30/09/2026 |
+**Instituição:** SENAI  
+**Curso:** Técnico de Desenvolvimento de Sistemas  
+**Unidade Curricular:** SESI CE 356  
+**Atividade:** Teste de Caixa Branca – Sistema de Pedidos  
+**Aluno:** julianopls  
+**Turma:** 3A  
+**Professores:** Robson, Reenye e Wellington  
+**Data:** 30/09/2026  
 
 ---
 
-## 1. Contextualização
+# 1. Contextualização
 
-No teste de caixa branca eu abro o código e testo a lógica por dentro, passando por cada `if` e cada caminho possível. Isso ajuda a achar erros que só aparecem em situações específicas, como um valor exatamente no limite de uma regra.
+No teste de caixa branca eu abro o código e testo a lógica por dentro, passando por cada `if` e cada caminho possível.
 
-**Sistema analisado:** uma página onde o usuário escolhe um produto, informa a quantidade, pode usar um cupom e escolhe o frete. Ao clicar em "Calcular pedido", ela mostra subtotal, desconto, frete e total. A lógica está toda no `script.js`.
+Isso ajuda a encontrar erros que aparecem em situações específicas, principalmente em valores que ficam exatamente no limite de uma regra.
 
-**Comportamento esperado:**
+**Sistema analisado:** uma página onde o usuário escolhe um produto, informa a quantidade, pode utilizar um cupom e escolhe o tipo de frete.
+
+Ao clicar em **"Calcular pedido"**, o sistema mostra:
+
+- Subtotal;
+- Desconto;
+- Frete;
+- Total;
+- Mensagem do pedido.
+
+A lógica está no arquivo `script.js`.
+
+---
+
+# 2. Comportamento Esperado
 
 | Regra | O que eu espero |
 |---|---|
 | Quantidade | Inteiro maior que zero |
 | Estoque | Posso pedir até a quantidade em estoque, inclusive |
 | Cupom `SENAI10` | 10% sobre o subtotal |
-| Cupom `SENAI20` | 20% sobre o subtotal, só com subtotal a partir de R$ 1.000 |
+| Cupom `SENAI20` | 20% sobre o subtotal, somente com subtotal a partir de R$ 1.000 |
 | Desconto por quantidade | 5% sobre o subtotal a partir de 5 unidades |
-| Frete | Retirada grátis; expresso R$ 60; normal R$ 30, grátis com subtotal a partir de R$ 500 |
-| Alto valor | Total a partir de R$ 3.000 ganha 5% extra e a mensagem "Pedido de alto valor" |
+| Retirada | Frete grátis |
+| Expresso | R$ 60 |
+| Normal | R$ 30, grátis com subtotal a partir de R$ 500 |
+| Alto valor | Total a partir de R$ 3.000 recebe 5% extra |
 | Exibição | Subtotal − descontos + frete deve bater com o total mostrado |
 
 ---
 
-## 2. Estruturas de Decisão
+# 3. Estruturas de Decisão
 
-O código só usa `if`, e o único operador lógico é o `&&` do cupom SENAI20.
+O código utiliza estruturas `if` para controlar os diferentes caminhos do sistema.
 
-| # | Onde | Condição | Caminhos |
+| ID | Onde | Condição | Caminhos |
 |---|---|---|---|
-| D1 | `calcularDesconto` | `codigo === "SENAI10"` | V: 10% / F: vai para D2 |
-| D2 | `calcularDesconto` | `codigo === "SENAI20" && subtotal >= 1000` | V: 20% / F: sem desconto |
-| D3 | `calcularFrete` | `tipo === "retirada"` | V: R$ 0 / F: vai para D4 |
-| D4 | `calcularFrete` | `tipo === "expresso"` | V: R$ 60 / F: vai para D5 |
-| D5 | `calcularFrete` | `subtotal >= 500` | V: R$ 0 / F: R$ 30 |
-| D6 | `finalizarPedido` | `qtd < 0` | V: "Quantidade inválida" / F: D7 |
-| D7 | `finalizarPedido` | `qtd >= estoque[produto]` | V: "Indisponível" / F: calcula |
-| D8 | `finalizarPedido` | `qtd > 5` | V: aplica 5% / F: não aplica |
-| D9 | `finalizarPedido` | `total > 3000` | V: 5% extra / F: não aplica |
-| D10 | `finalizarPedido` | `total <= 0` | V: "Valor inválido" / F: D11 |
-| D11 | `finalizarPedido` | `total >= 3000` | V: "Alto valor" / F: "Sucesso" |
+| D1 | `calcularDesconto` | `codigo === "SENAI10"` | 10% / continua |
+| D2 | `calcularDesconto` | `codigo === "SENAI20" && subtotal >= 1000` | 20% / sem desconto |
+| D3 | `calcularFrete` | `tipo === "retirada"` | R$ 0 / continua |
+| D4 | `calcularFrete` | `tipo === "expresso"` | R$ 60 / continua |
+| D5 | `calcularFrete` | `subtotal >= 500` | R$ 0 / R$ 30 |
+| D6 | `finalizarPedido` | quantidade inválida | Erro / continua |
+| D7 | `finalizarPedido` | `qtd > estoque` | Indisponível / calcula |
+| D8 | `finalizarPedido` | `qtd >= 5` | Aplica 5% / não aplica |
+| D9 | `finalizarPedido` | `totalParcial >= 3000` | Aplica 5% / não aplica |
+| D10 | `finalizarPedido` | `total <= 0` | Valor inválido / continua |
+| D11 | `finalizarPedido` | `altoValor` | Alto valor / sucesso |
 
 ---
 
-## 3. Fluxograma do Sistema
+# 4. Fluxogramas do Sistema
 
-```mermaid
-flowchart TD
-    A([Clique em Calcular]) --> B[/Lê produto, quantidade, cupom e frete/]
-    B --> C{qtd < 0?}
-    C -- Sim --> C1[Quantidade inválida] --> Z
-    C -- Não --> D{qtd >= estoque?}
-    D -- Sim --> D1[Indisponível em estoque] --> Z
-    D -- Não --> E[subtotal = preço × qtd]
-    E --> F[desconto = calcularDesconto]
-    F --> G[valorFrete = calcularFrete]
-    G --> H[total = subtotal − desconto + frete]
-    H --> I{qtd > 5?}
-    I -- Sim --> I1[total −= subtotal × 5%] --> J
-    I -- Não --> J{total > 3000?}
-    J -- Sim --> J1[total ×= 0,95] --> K
-    J -- Não --> K{total <= 0?}
-    K -- Sim --> K1[Valor inválido] --> M
-    K -- Não --> L{total >= 3000?}
-    L -- Sim --> L1[Alto valor] --> M
-    L -- Não --> L2[Sucesso] --> M
-    M[/Exibe mensagem e valores/] --> Z([Fim])
-```
+## 4.1 Fluxograma geral
+
+![Fluxograma geral](assets/mermaid-diagram.png)
 
 ---
 
-## 4. Casos de Teste e Resultados
+## 4.2 Fluxograma — Calcular desconto
 
-Criei um caso de teste para cada erro encontrado. Rodei todos em Node.js com a mesma lógica do `script.js`, antes e depois da correção.
-
-| ID | Entrada | Esperado | Obtido (original) | Depois |
-|---|---|---|---|---|
-| CT01 | Mouse, qtd 0, sem cupom, normal | "Quantidade inválida" | "Sucesso", total R$ 30,00 | Passou |
-| CT02 | Teclado, qtd 10 (= estoque), sem cupom, retirada | Aceito, total R$ 1.425,00 | "Indisponível em estoque" | Passou |
-| CT03 | Mouse, qtd 5, sem cupom, retirada | Desconto R$ 20,00, total R$ 380,00 | Sem desconto, total R$ 400,00 | Passou |
-| CT04 | Mouse, qtd 10, SENAI10, retirada | Desconto R$ 120,00, total R$ 680,00 | Desconto R$ 80,00, total R$ 680,00 | Passou |
-| CT05 | Notebook, qtd 1, sem cupom, retirada | Total R$ 2.850,00, "Alto valor" | Total R$ 3.000,00, "Alto valor" (mensagem certa, total errado) | Passou |
-| CT06 | Notebook, qtd 1, sem cupom, expresso | Total R$ 2.907,00, "Alto valor" | Total R$ 2.907,00, "Sucesso" (total certo, mensagem errada) | Passou |
+![Fluxograma calcular desconto](assets/mermaid-diagram%20(1).png)
 
 ---
+
+## 4.3 Fluxograma — Desconto por quantidade
+
+![Fluxograma desconto por quantidade](assets/mermaid-diagram%20(2).png)
+
+---
+
+## 4.4 Fluxograma — Calcular frete
+
+![Fluxograma calcular frete](assets/mermaid-diagram%20(3).png)
+
+---
+
+## 4.5 Fluxograma — Validação da quantidade
+
+![Fluxograma validação da quantidade](assets/mermaid-diagram%20(4).png)
+
+---
+
+## 4.6 Fluxograma — Cálculo do total
+
+![Fluxograma cálculo do total](assets/mermaid-diagram%20(5).png)
+
+---
+
+## 4.7 Fluxograma — Pedido de alto valor
+
+![Fluxograma pedido de alto valor](assets/mermaid-diagram%20(6).png)
+
+---
+
+## 4.8 Fluxograma completo da execução
+
+![Fluxograma completo](assets/mermaid-diagram%20(7).png)
+
+---
+
+#. Arquivos do Projeto
+
+O projeto é composto pelos seguintes arquivos:
+
+- `index.html` — estrutura da página;
+- `script.js` — lógica principal do sistema;
+- `script2.js` — código complementar;
+- `style.css` — estilos da página;
+- `README.md` — documentação do projeto;
+- `assets/` — imagens dos fluxogramas.
+
+---
+
 
 ## 5. Análise dos Erros
 
@@ -236,22 +272,6 @@ flowchart TD
     E -- "Falso (erro)" --> F["Sucesso, R$ 2.907,00"]
 ```
 
-### Resumo antes e depois
-
-| Erro | Nível | Antes | Depois |
-|---|---|---|---|
-| 1 | Fácil | Aceita quantidade 0 e cobra frete | Recusa 0, vazio e decimais |
-| 2 | Fácil | Bloqueia pedido igual ao estoque | Aceita até o estoque |
-| 3 | Médio | 5 unidades sem desconto | Desconto a partir de 5 |
-| 4 | Médio | Desconto mostrado não fecha com o total | Desconto soma cupom e quantidade |
-| 5 | Difícil | `>` e `>=` divergem em 3000 | Mesmo limite nas duas decisões |
-| 6 | Difícil | Perde "alto valor" após o desconto | Classificação decidida antes |
-
-### Cobertura
-
-Os seis casos cobrem os dois lados de D1, D3, D4, D6, D7, D8, D9 e D11, além do lado falso de D2 e de D10. Ainda faltam o lado verdadeiro de D2 (SENAI20 com subtotal a partir de R$ 1.000) e o lado verdadeiro de D5 (frete normal com subtotal a partir de R$ 500). Também vale testar SENAI20 abaixo de R$ 1.000 e um cupom inexistente.
-
----
 
 ## 6. Código Corrigido
 
