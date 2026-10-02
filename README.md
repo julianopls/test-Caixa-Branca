@@ -204,3 +204,10 @@ function finalizarPedido() {
 ```
 
 ---
+## Conclusão
+
+Com essa atividade, foi possível perceber que um programa pode funcionar normalmente e ainda apresentar erros na lógica. Os seis problemas encontrados não faziam o sistema parar ou mostrar mensagens de erro, mas causavam resultados diferentes do que era esperado. Para identificar esses problemas, foi necessário acompanhar os valores das variáveis e entender cada decisão tomada pelo código.
+
+A maioria dos erros estava relacionada aos limites das condições, como diferenças entre `<`, `<=`, `>` e `>=`. Também foi encontrado um problema relacionado ao desconto apresentado ao usuário e outro causado pela ordem em que as operações eram executadas, fazendo uma decisão alterar o valor utilizado em outra etapa.
+
+Os testes ajudaram a confirmar cada problema. Antes das correções, os seis casos apresentavam resultados incorretos. Depois dos ajustes, todos passaram a funcionar de acordo com as regras definidas. O fluxograma também foi importante para entender melhor o caminho que o programa seguia e facilitar a identificação dos erros.
