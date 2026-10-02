@@ -133,45 +133,6 @@ O projeto é composto pelos seguintes arquivos:
 
 
 
-**Teste:** notebook, quantidade 1, retirada (total exatamente 3000).
-**Caminho:** em D9, `3000 > 3000` é falso, então não há 5% extra. Em D11, `3000 >= 3000` é verdadeiro e a mensagem é "Alto valor".
-**Problema:** duas decisões testam o mesmo limite com operadores diferentes. O pedido é chamado de alto valor, mas não ganha o benefício. O erro só aparece exatamente em 3000.
-**Correção:** uma constante única e a mesma comparação nos dois lugares:
-```js
-const LIMITE_ALTO_VALOR = 3000;
-const altoValor = totalParcial >= LIMITE_ALTO_VALOR;
-```
-Resultado: total R$ 2.850,00 e "Pedido de alto valor".
-
-```mermaid
-flowchart TD
-    A[/notebook, qtd = 1, retirada/] --> B["total = 3000"]
-    B --> C{"total > 3000?"}
-    C -- "Falso (sem 5%)" --> D{"total >= 3000?"}
-    D -- Verdadeiro --> E["Alto valor, R$ 3.000,00 (inconsistente)"]
-```
-
-### Erro 6 — Difícil (análise de caminhos e rastreamento de variáveis)
-
-**Teste:** notebook, quantidade 1, frete expresso.
-**Caminho:** total = 3000 + 60 = 3060. Em D9, `3060 > 3000` é verdadeiro e o total vira 2907. Em D11, `2907 >= 3000` é falso e a mensagem sai "Sucesso".
-**Problema:** ordem das operações. O desconto extra reduz `total` e logo depois a mesma variável classifica o pedido. Qualquer pedido entre R$ 3.000,00 e cerca de R$ 3.157,89 perde a classificação. Uma decisão altera o dado que a próxima usa.
-**Correção:** decidir se é alto valor antes de mexer no total:
-```js
-const altoValor = totalParcial >= LIMITE_ALTO_VALOR;
-const descontoAltoValor = altoValor ? totalParcial * 0.05 : 0;
-const total = totalParcial - descontoAltoValor;
-```
-Resultado: "Pedido de alto valor." e total R$ 2.907,00.
-
-```mermaid
-flowchart TD
-    A[/notebook, qtd = 1, expresso/] --> B["total = 3060"]
-    B --> C{"total > 3000?"}
-    C -- Sim --> D["total = 2907"]
-    D --> E{"total >= 3000? (2907)"}
-    E -- "Falso (erro)" --> F["Sucesso, R$ 2.907,00"]
-```
 
 
 ## 6. Código Corrigido
